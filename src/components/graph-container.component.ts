@@ -5,7 +5,14 @@ import { Component, OnInit } from '@angular/core';
   template: `
     <div>
       <button (click)="add()">Add</button>
-      <graph-node *ngFor="let id of list"></graph-node>
+      <graph-node 
+        *ngFor="let n of list; trackBy track"
+        trackBy
+        [(x)]="n.x"
+        [(y)]="n.y"
+        [(width)]="n.width"
+        [(height)]="n.height">
+      </graph-node>
       <graph-link></graph-link>
     </div>
   `
@@ -14,13 +21,27 @@ import { Component, OnInit } from '@angular/core';
 export class GraphContainerComponent implements OnInit {
   constructor() { }
 
-  public list = [1,2];
+  private default = {
+    id: 0,
+    x: 0,
+    y: 0,
+    width: 150,
+    height: null
+  }
+
+  //Hold Tree Struct
+  public list = [];
 
   ngOnInit() {
   }
 
   add() {
     const id = this.list.length;
-    this.list.push(id);
+    this.default.id = id;
+    this.list.push({...this.default});
+  }
+
+  track(index, item) {
+    return item.id;
   }
 }
